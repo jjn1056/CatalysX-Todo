@@ -27,6 +27,7 @@ __PACKAGE__->grouping_column('todolist_id');
 __PACKAGE__->set_primary_key('todolist_id');
 __PACKAGE__->belongs_to(
   status => '::Status',
-  { 'foreign.status_id' => 'self.fk_status_id' });
+  { 'foreign.status_id' => 'self.fk_status_id' },
+  { proxy => [{current_status=>'name'}] });
 
 1;

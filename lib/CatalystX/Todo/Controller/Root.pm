@@ -8,12 +8,10 @@ extends 'Catalyst::Controller';
 
 sub root :Chained(/) PathPart('') CaptureArgs(0) {  }
 
-  sub test_list :Chained(root) Args(0) {
+  sub list :Chained(root) PathPart('') Args(0) {
     my ($self, $c) = @_;
-
-    use Devel::Dwarn;
-    Dwarn $c->model('Schema::TodoList')->first->get_columns; 
-    $c->res->body('fff');
+    $c->view('List')->apply_list($c->model('Schema::TodoList'));
+    $c->view('List')->send_response;
   } 
 
 sub default :Default { $_[1]->go('/not_found') }
