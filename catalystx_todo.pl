@@ -17,13 +17,11 @@ my $config = {
   'inject_components' => {
     'View::List' => { from_class => 'CatalystX::Todo::ListView', adaptor=>'PerRequest' },
     'Model::Schema' => { from_component => 'Catalyst::Model::DBIC::Schema' },
-    'Model::Template' => {
+    'Model::Path' => {
       adaptor => 'PerRequest',
       from_code => sub {
         my ($adaptor_instance, $coderef, $c, %args) = @_;
-        my $path = File::Spec->catfile($args{base_path}, $args{template});
-        warn "$path";
-        return $path;
+        return File::Spec->catfile($args{base_path}, $args{template_part});
       },
     },
     'Model::Form' => {
@@ -31,7 +29,7 @@ my $config = {
       roles => ['HTML::Formhandler::Role::ToJSON'],
     },
   },
-  'Model::Template' => {
+  'Model::Path' => {
     base_path => '__path_to(root)__',
     extension => 'html',
   },
@@ -43,11 +41,11 @@ my $config = {
  'Plugin::MapComponentDependencies' => {
     map_dependencies => {
       'View::List' => {
-        template => 'Model::Template',
-        response=> sub { shift->response },
+        template => 'Model::Path',
+        response => sub { shift->response },
       },
-      'Model::Template' => {
-        template => sub {
+      'Model::Path' => {
+        template_part => sub {
           my ($c, $component_name, $config) = @_;
           return "${\$c->action}.$config->{extension}";
         },

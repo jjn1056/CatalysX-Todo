@@ -10,10 +10,8 @@ use Catalyst qw/
   InjectionHelpers
   MapComponentDependencies/;
 
-sub version { our $VERSION ||= eval '0.001' }
 
-__PACKAGE__->request_class_traits(['Catalyst::TraitFor::Request::ContentNegotiationHelpers']);
-
+__PACKAGE__->request_class_traits(['ContentNegotiationHelpers']);
 __PACKAGE__->setup;
 
 =head1 NAME

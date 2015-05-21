@@ -95,11 +95,7 @@ has zoomer => (
 sub apply_list {
   my ($self, $resultset) = @_;
   my $hz = $self->zoomer->select('.data-row')->$fill(
-    [
-      {'.priority' => 'priority' },
-      {'.description' => 'description' },
-      {'.status' => 'current_status' },
-    ],
+    [qw/priority description current_status/],
     $resultset->all);
 
   $self->zoomer($hz);
@@ -109,7 +105,7 @@ sub send_response {
   my ($self) = @_;
   $self->response->content_type('text/html');
   $self->response->body(
-    $self->zoomer->to_html);
+    $self->zoomer->to_fh);
 }
 
 1;
