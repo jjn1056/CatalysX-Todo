@@ -39,16 +39,14 @@ my $config = {
     connect_info => [ sub { Schema()->storage->dbh } ],
   },
  'Plugin::MapComponentDependencies' => {
-    map_dependencies => {
-      'View::List' => {
-        template => 'Model::Path',
-        response => sub { shift->response },
-      },
-      'Model::Path' => {
-        template_part => sub {
-          my ($c, $component_name, $config) = @_;
-          return "${\$c->action}.$config->{extension}";
-        },
+    'View::List' => {
+      template => 'Model::Path',
+      response => sub { shift->response },
+    },
+    'Model::Path' => {
+      template_part => sub {
+        my ($c, $component_name, $config) = @_;
+        return "${\$c->action}.$config->{extension}";
       },
     },
   },
