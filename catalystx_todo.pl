@@ -1,4 +1,5 @@
 use File::Spec;
+use Catalyst::Plugin::MapComponentDependencies::Utils ':ALL';
 use Test::DBIx::Class
   -schema_class => 'CatalystX::Todo::Schema',
     qw/TodoList Status Schema/;
@@ -32,25 +33,20 @@ my $config = {
   'Model::Path' => {
     base_path => '__path_to(root)__',
     extension => 'html',
+    template_part => FromCode {
+      my ($c, $component_name, $config) = @_;
+      return "${\$c->action}.$config->{extension}";
+    },
   },
   'Model::Schema' => {
     traits => ['Result'],
     schema_class => 'CatalystX::Todo::Schema',
     connect_info => [ sub { Schema()->storage->dbh } ],
   },
- 'Plugin::MapComponentDependencies' => {
-    'View::List' => {
-      template => 'Model::Path',
-      response => sub { shift->response },
-    },
-    'Model::Path' => {
-      template_part => sub {
-        my ($c, $component_name, $config) = @_;
-        return "${\$c->action}.$config->{extension}";
-      },
-    },
+  'View::List' => {
+    template => FromModel 'Path',
+    response => FromCode { shift->response },
   },
 };
 
 return $config;
-
